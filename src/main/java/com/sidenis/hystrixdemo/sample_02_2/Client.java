@@ -58,7 +58,7 @@ public class Client {
 
     @Scheduled(fixedDelay = 100)
     void load() {
-        call("https://jsonplaceholder.typicode.com/users");
+        call("https://jsonplaceholder.typicode.com/users/1");
     }
 
     @Scheduled(fixedDelay = 500)

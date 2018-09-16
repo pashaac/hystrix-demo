@@ -9,22 +9,11 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 @Slf4j
-@Component
 public class Client {
 
-    private RestTemplate restTemplate;
+    private static final RestTemplate restTemplate = new RestTemplate();
 
-    @PostConstruct
-    public void init() {
-        restTemplate = new RestTemplate();
-    }
-
-    String call() {
-        HystrixTask hystrixTask = new HystrixTask();
-        return hystrixTask.execute();
-    }
-
-    class HystrixTask extends HystrixCommand<String> {
+    public static class HystrixTask extends HystrixCommand<String> {
 
         HystrixTask() {
             super(HystrixCommandGroupKey.Factory.asKey("HystrixDemoUsersRestCall"));
@@ -32,8 +21,13 @@ public class Client {
 
         @Override
         protected String run() throws Exception {
-            return restTemplate.getForObject("https://jsonplaceholder.typicode.com/users", String.class);
+            return restTemplate.getForObject("https://jsonplaceholder.typicode.com/users/1", String.class);
         }
+    }
+
+    public static void main(String[] args) {
+        HystrixTask hystrixTask = new HystrixTask();
+        log.info(hystrixTask.execute());
     }
 
 }
