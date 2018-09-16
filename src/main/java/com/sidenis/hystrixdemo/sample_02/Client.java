@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -26,31 +27,31 @@ public class Client {
         });
     }
 
-    @Nullable
-    private static String call(Future<String> future) {
+    private static Optional<String> call(Future<String> future) {
         try {
-            return future.get(1, TimeUnit.SECONDS);
+            return Optional.ofNullable(future.get(3, TimeUnit.SECONDS));
         } catch (InterruptedException e) {
             log.severe("Task execution was interrupted, message: " + e.getMessage());
-            return null;
+            return Optional.empty();
         } catch (ExecutionException e) {
             log.severe("Execution exception during task execution, message: " + e.getMessage());
-            return null;
+            return Optional.empty();
         } catch (TimeoutException e) {
             log.severe("Timeout exception during task execution, message: " + e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 
     public static void main(String[] args) {
-        String url = "https://jsonplaceholder.typicode.com/users";
+        String url = "https://jsonplaceholder.typicode.com/users/1";
         Future<String> future1 = call(url);
         Future<String> future2 = call(url);
         Future<String> future3 = call(url);
 
-        log.info(call(future1));
-        log.info(call(future2));
-        log.info(call(future3));
+        call(future1).ifPresent(log::info);
+        call(future2).ifPresent(log::info);
+        call(future3).ifPresent(log::info);
+
         service.shutdown();
     }
 

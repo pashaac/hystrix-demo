@@ -1,8 +1,6 @@
 package com.sidenis.hystrixdemo.sample_03;
 
-import com.google.common.io.CharStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -10,10 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.*;
 
@@ -21,17 +16,18 @@ import java.util.concurrent.*;
 @Component
 public class Client {
 
+    private static final int TIMEOUT = 1000;
+
+    private static Random random = new Random();
+    private static RestTemplate restTemplate = new RestTemplate();
+
     private BlockingQueue<Runnable> queue;
     private ExecutorService service;
-    private Random random;
-    private RestTemplate restTemplate;
 
     @PostConstruct
     public void init() {
-        restTemplate = new RestTemplate();
-        random = new Random();
         queue = new LinkedBlockingQueue<>();
-        service = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, queue);
+        service = new ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS, queue);
     }
 
     @PreDestroy
@@ -41,24 +37,23 @@ public class Client {
 
     private Future<String> call(String url) {
         return service.submit(() -> {
-            Thread.sleep((long) (1000 * random.nextDouble()));
+            Thread.sleep((long) (TIMEOUT * random.nextDouble()));
             return restTemplate.getForObject(url, String.class);
         });
     }
 
-    @Nullable
-    private String call(Future<String> future) {
+    private Optional<String> call(Future<String> future) {
         try {
-            return future.get(1, TimeUnit.SECONDS);
+            return Optional.ofNullable(future.get(TIMEOUT, TimeUnit.MILLISECONDS));
         } catch (InterruptedException e) {
             log.error("Task execution was interrupted, message: {}", e.getMessage());
-            return null;
+            return Optional.empty();
         } catch (ExecutionException e) {
             log.error("Execution exception during task execution, message: {}", e.getMessage());
-            return null;
+            return Optional.empty();
         } catch (TimeoutException e) {
             log.error("Timeout exception during task execution, message: {}", e.getMessage());
-            return null;
+            return Optional.empty();
         }
     }
 

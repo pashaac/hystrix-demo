@@ -31,13 +31,51 @@ public class DemoController {
             protected String run() throws Exception {
                 return client.call(error, latency);
             }
+
+            @Override
+            protected String getFallback() {
+                return "Oops, system temporary unavailable ¯\\_(ツ)_/¯";
+            }
         };
         return hystrixCommand.execute();
     }
 
+
     private HystrixCommand.Setter configuration() {
         return HystrixCommand.Setter
-                .withGroupKey(HystrixCommandGroupKey.Factory.asKey("HystrixDemo"))
-                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withCircuitBreakerEnabled(false));
+                .withGroupKey(HystrixCommandGroupKey.Factory.asKey("Hystrix-Demo"))
+                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD)
+                        .withExecutionTimeoutInMilliseconds(1000)
+                        .withExecutionTimeoutEnabled(true)
+                        .withExecutionIsolationThreadInterruptOnTimeout(true)
+                        .withExecutionIsolationThreadInterruptOnFutureCancel(false)
+                        .withExecutionIsolationSemaphoreMaxConcurrentRequests(10)
+                        .withFallbackIsolationSemaphoreMaxConcurrentRequests(10)
+                        .withFallbackEnabled(true)
+                        .withCircuitBreakerEnabled(true)
+                        .withCircuitBreakerRequestVolumeThreshold(20)
+                        .withCircuitBreakerSleepWindowInMilliseconds(5000)
+                        .withCircuitBreakerErrorThresholdPercentage(50)
+                        .withCircuitBreakerForceOpen(false)
+                        .withCircuitBreakerForceClosed(false)
+                        .withMetricsRollingStatisticalWindowInMilliseconds(10000)
+                        .withMetricsRollingStatisticalWindowBuckets(10)
+                        .withMetricsRollingPercentileEnabled(true)
+                        .withMetricsRollingPercentileWindowInMilliseconds(60000)
+                        .withMetricsRollingPercentileWindowBuckets(6)
+                        .withMetricsRollingPercentileBucketSize(100)
+                        .withMetricsHealthSnapshotIntervalInMilliseconds(500)
+                        .withRequestCacheEnabled(true)
+                        .withRequestLogEnabled(true))
+                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+                        .withCoreSize(10)
+                        .withMaximumSize(10)
+                        .withMaxQueueSize(-1)
+                        .withQueueSizeRejectionThreshold(5)
+                        .withKeepAliveTimeMinutes(1)
+                        .withAllowMaximumSizeToDivergeFromCoreSize(false)
+                        .withMetricsRollingStatisticalWindowInMilliseconds(10000)
+                        .withMetricsRollingStatisticalWindowBuckets(10));
     }
 }

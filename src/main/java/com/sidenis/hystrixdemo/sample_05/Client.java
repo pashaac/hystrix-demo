@@ -19,7 +19,7 @@ public class Client {
         restTemplate = new RestTemplate();
     }
 
-    @HystrixCommand(groupKey = "HystrixDemoUsersRestCall"/*, commandProperties = {@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "10")}*/)
+    @HystrixCommand(groupKey = "HystrixDemoUsersRestCall", commandProperties = {@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "10")})
     String call() {
         return restTemplate.getForObject("https://jsonplaceholder.typicode.com/users", String.class);
     }

@@ -32,6 +32,7 @@ public class Client {
 
         @Override
         protected String run() throws Exception {
+//            throw new RuntimeException();
             return restTemplate.getForObject("https://jsonplaceholder.typicode.com/users", String.class);
         }
 
