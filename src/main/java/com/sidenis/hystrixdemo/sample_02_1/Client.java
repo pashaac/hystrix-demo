@@ -1,8 +1,7 @@
-package com.sidenis.hystrixdemo.sample_02;
+package com.sidenis.hystrixdemo.sample_02_1;
 
 import com.google.common.io.CharStreams;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;

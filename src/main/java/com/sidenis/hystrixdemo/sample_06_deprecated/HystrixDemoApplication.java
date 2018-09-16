@@ -1,4 +1,4 @@
-package com.sidenis.hystrixdemo.sample_06;
+package com.sidenis.hystrixdemo.sample_06_deprecated;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

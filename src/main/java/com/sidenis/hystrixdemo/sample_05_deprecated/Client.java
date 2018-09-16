@@ -1,4 +1,4 @@
-package com.sidenis.hystrixdemo.sample_05;
+package com.sidenis.hystrixdemo.sample_05_deprecated;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
