@@ -35,19 +35,4 @@ public class Client {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// "Oops, system temporary unavailable ¯\\_(ツ)_/¯"

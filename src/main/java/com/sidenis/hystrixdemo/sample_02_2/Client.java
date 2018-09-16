@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 @Component
 public class Client {
 
-    private static final int TIMEOUT = 1000;
+    private static final int TIMEOUT = 500;
 
     private static Random random = new Random();
     private static RestTemplate restTemplate = new RestTemplate();
@@ -39,21 +39,6 @@ public class Client {
             Thread.sleep((long) (TIMEOUT * random.nextDouble()));
             return restTemplate.getForObject(url, String.class);
         });
-    }
-
-    private Optional<String> call(Future<String> future) {
-        try {
-            return Optional.ofNullable(future.get(TIMEOUT, TimeUnit.MILLISECONDS));
-        } catch (InterruptedException e) {
-            log.error("Task execution was interrupted, message: {}", e.getMessage());
-            return Optional.empty();
-        } catch (ExecutionException e) {
-            log.error("Execution exception during task execution, message: {}", e.getMessage());
-            return Optional.empty();
-        } catch (TimeoutException e) {
-            log.error("Timeout exception during task execution, message: {}", e.getMessage());
-            return Optional.empty();
-        }
     }
 
     @Scheduled(fixedDelay = 100)

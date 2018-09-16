@@ -43,6 +43,7 @@ public class Client {
 
     public static void main(String[] args) {
         String url = "https://jsonplaceholder.typicode.com/users/1";
+
         Future<String> future1 = call(url);
         Future<String> future2 = call(url);
         Future<String> future3 = call(url);
