@@ -11,7 +11,7 @@ public class MockClient {
 
     public String call(int error, int latency) {
         try {
-            TimeUnit.MILLISECONDS.sleep(latency );
+            TimeUnit.MILLISECONDS.sleep(latency);
         } catch (InterruptedException e) {
             log.warn("Thread was interrupted...");
         }
