@@ -22,7 +22,6 @@ repositories {
     mavenCentral()
 }
 
-
 ext {
     springCloudVersion = 'Edgware.SR4'
 }

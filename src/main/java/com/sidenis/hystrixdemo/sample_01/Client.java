@@ -16,23 +16,29 @@ import java.util.logging.Logger;
  */
 public class Client {
 
-    private static final Logger log = Logger.getLogger(Client.class.getName());
+  private static final Logger log = Logger.getLogger(Client.class.getName());
 
-    private static Optional<String> call(String url) {
-        try {
-            try (InputStream stream = new URL(url).openStream(); Reader reader = new InputStreamReader(stream)) {
-                return Optional.of(CharStreams.toString(reader));
-            }
-        } catch (IOException e) {
-            log.severe("Error during network call to URL: " + url + ", message: " + e.getMessage());
-            return Optional.empty();
-        }
+  @SuppressWarnings("Duplicates")
+  private static Optional<String> call() {
+    String url = "https://jsonplaceholder.typicode.com/users/1";
+    try {
+      try (InputStream stream = new URL(url).openStream(); Reader reader = new InputStreamReader(stream)) {
+        return Optional.of(toString(reader).replaceAll("\\s+", " "));
+      }
+    } catch (IOException e) {
+      log.severe("Error during network call to URL: " + url + ", message: " + e.getMessage());
+      return Optional.empty();
     }
+  }
 
+  @SuppressWarnings("All")
+  private static String toString(Reader reader) throws IOException {
+    return CharStreams.toString(reader);
+  }
 
-    public static void main(String[] args) {
-        call("https://jsonplaceholder.typicode.com/users/1").ifPresent(log::info);
-    }
+  public static void main(String[] args) {
+    call().ifPresent(log::info);
+  }
 
 }
 
