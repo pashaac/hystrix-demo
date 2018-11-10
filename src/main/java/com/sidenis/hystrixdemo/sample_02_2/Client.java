@@ -18,8 +18,6 @@ public class Client {
 
   private static final Logger log = LoggerFactory.getLogger(Client.class);
 
-  private static final int TIMEOUT = 500;
-
   private static Random random = new Random();
   private static RestTemplate restTemplate = new RestTemplate();
 

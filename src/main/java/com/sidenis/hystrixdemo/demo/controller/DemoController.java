@@ -30,6 +30,7 @@ public class DemoController {
   String securely(@RequestParam(value = "error", required = false, defaultValue = "0") int error,
                   @RequestParam(value = "latency", required = false, defaultValue = "0") int latency) {
     HystrixCommand<String> hystrixCommand = new HystrixCommand<String>(configuration()) {
+
       @Override
       protected String run() throws Exception {
         return client.call(error, latency);
@@ -40,6 +41,7 @@ public class DemoController {
         return "Oops, system temporary unavailable ¯\\_(ツ)_/¯";
       }
     };
+
     return hystrixCommand.execute();
   }
 
